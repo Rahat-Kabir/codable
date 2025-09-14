@@ -21,7 +21,7 @@ An AI-powered coding assistant scaffold built with LangGraph and LangChain. This
 
 ### Setup
 
-1) Create a virtual environment and install deps
+1. Create a virtual environment and install deps
 
 Using uv (recommended):
 
@@ -38,7 +38,7 @@ pip install -U pip
 pip install -e .
 ```
 
-2) Configure environment variables
+2. Configure environment variables
 
 You can copy the provided `dotenv` file and fill in your keys:
 
@@ -97,5 +97,3 @@ The default entry point currently prints a hello message. Extend the agent modul
 - Optional: interactive REPL and/or API server
 
 ---
-
-Project name: Codable. Note: `pyproject.toml` currently sets the package name to `coder-buddy`. I can rename it to `codable` (and adjust imports if needed) on request.
