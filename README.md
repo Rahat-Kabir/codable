@@ -1,27 +1,26 @@
 # Codable
 
-An AI-powered coding assistant scaffold built with LangGraph and LangChain. This repository is a minimal starting point for building task‑oriented developer agents that reason over code, call tools, and assist in day‑to‑day coding.
+Codable bundles a LangGraph/LangChain coding agent scaffold with an optional FastAPI web UI. The agent is prompt-driven: you submit a project request and it generates code—no live editing loop so far.
 
-## Features
+## What's Included
 
-- LangGraph agent scaffolding (`agent/graph.py`) for multi‑step reasoning and tool orchestration
-- Prompt and state modules (`agent/prompts.py`, `agent/states.py`) ready for extension
-- Tooling surface (`agent/tools.py`) to plug in code search, file edits, and other capabilities
-- Pluggable LLM providers via LangChain (OpenAI, Groq)
-- `.env` support via `python-dotenv` for API keys
-- Simple entry point in `main.py`
+- Agent core: `agent/` holds prompts, typed state, tools, and the LangGraph wiring.
+- CLI entry point: `main.py` is a thin starter you can extend to run the graph or script workflows.
+- Web UI: `app.py` and `static/` serve a real-time dashboard with prompt input, stage updates, file previews, and downloads over WebSockets.
 
-## Quick Start
+## Tech we use (and why)
 
-### Prerequisites
+- LangGraph + LangChain: keeps multi-step reasoning transparent while giving us LLM provider flexibility.
+- FastAPI + WebSockets: lightweight async server that makes streaming status updates trivial.
+- Vanilla JS + CSS + Prism.js: minimal front-end stack that stays easy to fork, yet provides syntax-highlighted previews.
+
+## Requirements
 
 - Python `>= 3.11`
-- One or more LLM provider keys: `OPENAI_API_KEY` and/or `GROQ_API_KEY`
-- Optional: [uv](https://github.com/astral-sh/uv) for fast Python env management
+- `OPENAI_API_KEY` and/or `GROQ_API_KEY`
+- Optional: [uv](https://github.com/astral-sh/uv) for dependency management
 
-### Setup
-
-1. Create a virtual environment and install deps
+## Install
 
 Using uv (recommended):
 
@@ -29,71 +28,75 @@ Using uv (recommended):
 uv sync
 ```
 
-Or using pip:
+Using pip:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -U pip
 pip install -e .
 ```
 
-2. Configure environment variables
+## Configure API keys
 
-You can copy the provided `dotenv` file and fill in your keys:
+Copy the sample dotenv and add your keys:
 
 ```bash
 cp dotenv .env
-# Edit .env and set OPENAI_API_KEY / GROQ_API_KEY
+# edit .env -> GROQ_API_KEY
 ```
 
-Alternatively, export them directly in your shell:
+Or export them directly in your shell.
 
-```bash
-export OPENAI_API_KEY=...   # or GROQ_API_KEY=...
-```
+## Run
 
-### Run
+### CLI agent
 
 ```bash
 python main.py
 ```
 
-The default entry point currently prints a hello message. Extend the agent modules to wire up the LangGraph workflow and interactive CLI.
+`main.py` currently prints a placeholder message. Swap in your LangGraph loop once the graph is defined in `agent/graph.py`.
 
-## Configuration
+### Web UI
 
-- Provider selection: This starter includes dependencies for `langchain-openai` and `langchain-groq`. Choose one or both by setting the corresponding API key(s). In your agent wiring, construct the LLM based on which key is present.
-- Environment: Values are read from `.env` if present (`python-dotenv`).
+```bash
+python app.py
+# or
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
 
-## Project Structure
+Then open `http://localhost:8000`, enter a build prompt, send it, watch the planning/architecting/coding stages, review the generated files, and download the project archive.
+
+## Project layout
 
 ```
 .
 ├─ agent/
-│  ├─ graph.py      # Build your LangGraph here
-│  ├─ prompts.py    # System/user prompts, templates
-│  ├─ states.py     # Typed state for your graph nodes
-│  └─ tools.py      # Tool implementations surfaced to the agent
-├─ main.py          # CLI/entry point
-├─ pyproject.toml   # Project metadata & dependencies
-├─ uv.lock          # uv lockfile (if using uv)
+│  ├─ graph.py
+│  ├─ prompts.py
+│  ├─ states.py
+│  └─ tools.py
+├─ app.py
+├─ main.py
+├─ static/
+│  ├─ app.js
+│  ├─ index.html
+│  └─ styles.css
+├─ dotenv
+├─ pyproject.toml
 └─ README.md
 ```
 
-## Development Notes
+## Build notes
 
-- Start by defining your agent state and tools in `agent/states.py` and `agent/tools.py`.
-- Build your graph in `agent/graph.py` using LangGraph nodes and edges that call tools and LLMs.
-- Add prompt templates in `agent/prompts.py` and wire them into your graph nodes.
-- Update `main.py` to run the graph and expose a CLI loop or server endpoint.
+- Define typed state and tools (`agent/states.py`, `agent/tools.py`) before wiring the graph.
+- `agent/graph.py` orchestrates tool calls and LLMs; adjust it as you enable new capabilities.
+- The web UI talks to `app.py` via WebSockets; update both sides if your agent contract changes.
+- Add tests or scripts as you expand agent logic, tool behaviors, or UI interactions.
 
-## Roadmap / TODO
+## Next ideas
 
-- Implement the LangGraph in `agent/graph.py`
-- Add real tools (file read/write, search, run, etc.)
-- Support provider selection (OpenAI/Groq) via env
-- Add tests and example sessions
-- Optional: interactive REPL and/or API server
-
----
+- Swap in Monaco editor for richer code viewing.
+- Add a file tree or project history persistence.
+- Support packaged deployments of generated projects.

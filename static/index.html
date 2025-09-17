@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codable - AI Coding Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.5 2L3 7v10l6.5 5L16 17l-3-2.5L9.5 17l-3.5-3V10l3.5-3L13 9.5L16 7L9.5 2z" fill="currentColor"/>
+                    <path d="M14.5 7L21 12l-6.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Codable</span>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 2v2m0 16v2M4 12H2m20 0h-2m-2.93-7.07l-1.41 1.41M7.34 16.66l-1.41 1.41M16.66 16.66l1.41 1.41M7.34 7.34L5.93 5.93" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <div class="left-sidebar">
+                <!-- Welcome Section -->
+                <div class="welcome-section" id="welcomeSection">
+                    <div class="welcome-content">
+                        <h2>Welcome to Codable!</h2>
+                        <p>Create complete projects with just a description.</p>
+                    </div>
+                </div>
+
+                <!-- Input Section -->
+                <div class="input-section">
+                    <div class="input-area">
+                        <textarea
+                            id="promptInput"
+                            class="prompt-input"
+                            placeholder="Describe what you want to build..."
+                            rows="3"
+                        ></textarea>
+                        <button class="send-button" onclick="sendPrompt()" id="sendButton">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Suggestion Chips -->
+                    <div class="suggestion-chips">
+                        <button class="chip" onclick="sendSuggestion('Build a modern todo app with React')">
+                            Todo App
+                        </button>
+                        <button class="chip" onclick="sendSuggestion('Create a landing page with animations')">
+                            Landing Page
+                        </button>
+                        <button class="chip" onclick="sendSuggestion('Build a REST API with FastAPI')">
+                            REST API
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Status Bar -->
+                <div class="status-bar" id="statusBar" style="display: none;">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Initializing...</span>
+                    </div>
+                    <div class="progress-stages">
+                        <div class="stage" data-stage="planner">
+                            <span class="stage-icon">📋</span>
+                            <span>Planning</span>
+                        </div>
+                        <div class="stage" data-stage="architect">
+                            <span class="stage-icon">🏗️</span>
+                            <span>Architecting</span>
+                        </div>
+                        <div class="stage" data-stage="coder">
+                            <span class="stage-icon">💻</span>
+                            <span>Coding</span>
+                        </div>
+                        <div class="stage" data-stage="complete">
+                            <span class="stage-icon">✅</span>
+                            <span>Complete</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project History -->
+                <div class="project-history">
+                    <h3>Recent Projects</h3>
+                    <div class="project-list" id="projectList">
+                        <div class="empty-state">
+                            <p>No projects yet. Create your first project above!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-panel">
+                <!-- Default State -->
+                <div class="default-state" id="defaultState">
+                    <div class="default-content">
+                        <div class="logo-large">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.5 2L3 7v10l6.5 5L16 17l-3-2.5L9.5 17l-3.5-3V10l3.5-3L13 9.5L16 7L9.5 2z" fill="currentColor"/>
+                                <path d="M14.5 7L21 12l-6.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h2>Your AI Coding Assistant</h2>
+                        <p>Start by describing what you want to build in the input area on the left.</p>
+                    </div>
+                </div>
+
+                <!-- Code Preview Section -->
+                <div class="code-section" id="codeSection" style="display: none;">
+                    <div class="code-header">
+                        <h3 id="projectTitle">Generated Project</h3>
+                        <div class="file-tabs" id="fileTabs"></div>
+                        <div class="header-actions">
+                            <button class="action-button" onclick="downloadProject()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m4-5l5 5 5-5m-5 5V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-content">
+                        <div class="code-editor" id="codeEditor">
+                            <pre><code id="codeContent"></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>

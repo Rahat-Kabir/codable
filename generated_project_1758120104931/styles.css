@@ -1,0 +1,143 @@
+/*
+    Calculator Styles
+    Implements visual styling and responsive layout as per specification.
+*/
+
+:root {
+    /* Color palette */
+    --bg-color: #f0f0f0;            /* Page background */
+    --calc-bg: #ffffff;            /* Calculator container */
+    --display-bg: #eaeaea;         /* Display background */
+    --button-bg: #e0e0e0;          /* Default button background */
+    --button-hover: #d0d0d0;       /* Default button hover */
+    --button-active: #c0c0c0;      /* Default button active/pressed */
+    --operator-bg: #ff9500;        /* Operator button background */
+    --operator-hover: #e08900;     /* Operator button hover */
+    --clear-bg: #ff3b30;           /* Clear button background */
+    --clear-hover: #e03228;        /* Clear button hover */
+    --font-family: Arial, Helvetica, sans-serif;
+    --font-size: 1.2rem;           /* Base button font size */
+    --spacing: 8px;                /* General spacing/gap */
+}
+
+/* Page layout */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    font-family: var(--font-family);
+    font-size: 16px; /* fallback base */
+}
+
+/* Calculator container */
+.calculator {
+    width: 100%;
+    max-width: 320px;
+    background-color: var(--calc-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing);
+    box-sizing: border-box;
+}
+
+/* Display */
+.display {
+    background-color: var(--display-bg);
+    padding: var(--spacing);
+    font-size: 2rem;
+    text-align: right;
+    border-radius: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: var(--spacing);
+    user-select: none;
+}
+
+/* Buttons grid */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing);
+}
+
+/* Base button style */
+button {
+    width: 100%;
+    padding: var(--spacing) 0;
+    font-size: var(--font-size);
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--button-bg);
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.05s ease;
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+button:active {
+    background-color: var(--button-active);
+    transform: translateY(2px);
+}
+
+/* Operator buttons */
+button[data-type="operator"] {
+    background-color: var(--operator-bg);
+    color: #fff;
+}
+
+button[data-type="operator"]:hover {
+    background-color: var(--operator-hover);
+}
+
+button[data-type="operator"]:active {
+    background-color: var(--operator-bg);
+    opacity: 0.9;
+}
+
+/* Clear button */
+button[data-type="clear"] {
+    background-color: var(--clear-bg);
+    color: #fff;
+}
+
+button[data-type="clear"]:hover {
+    background-color: var(--clear-hover);
+}
+
+button[data-type="clear"]:active {
+    background-color: var(--clear-bg);
+    opacity: 0.9;
+}
+
+/* Equals button (optional distinct styling) */
+button[data-type="equals"] {
+    background-color: var(--operator-bg);
+    color: #fff;
+}
+
+button[data-type="equals"]:hover {
+    background-color: var(--operator-hover);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    :root {
+        --font-size: 1rem;
+        --spacing: 6px;
+    }
+    .display {
+        font-size: 1.5rem;
+        padding: var(--spacing);
+    }
+    .calculator {
+        padding: var(--spacing);
+    }
+}

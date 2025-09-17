@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from langchain.globals import set_verbose, set_debug
-from langchain_groq.chat_models import ChatGroq
+from langchain_groq import ChatGroq
 from langgraph.constants import END
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import create_react_agent
@@ -20,11 +20,18 @@ llm = ChatGroq(model="openai/gpt-oss-120b")
 def planner_agent(state: dict) -> dict:
     """Converts user prompt into a structured Plan."""
     user_prompt = state["user_prompt"]
+    project_id = state.get("project_id")
+
     resp = llm.with_structured_output(Plan).invoke(
         planner_prompt(user_prompt)
     )
     if resp is None:
         raise ValueError("Planner did not return a valid response.")
+
+    # Set project_id on the plan if available
+    if project_id:
+        resp.project_id = project_id
+
     return {"plan": resp}
 
 
@@ -38,15 +45,26 @@ def architect_agent(state: dict) -> dict:
         raise ValueError("Planner did not return a valid response.")
 
     resp.plan = plan
-    print(resp.model_dump_json())
+    # Safely print to avoid encoding issues
+    try:
+        print(resp.model_dump_json())
+    except UnicodeEncodeError:
+        print("[TaskPlan created - details omitted due to encoding]")
     return {"task_plan": resp}
 
 
 def coder_agent(state: dict) -> dict:
     """LangGraph tool-using coder agent."""
     coder_state: CoderState = state.get("coder_state")
+    project_id = state.get("project_id")
+
     if coder_state is None:
-        coder_state = CoderState(task_plan=state["task_plan"], current_step_idx=0)
+        coder_state = CoderState(task_plan=state["task_plan"], current_step_idx=0, project_id=project_id)
+
+    # Set project root context if project_id is available
+    if project_id and hasattr(coder_state, 'project_id'):
+        from agent.tools import set_project_root
+        set_project_root(project_id)
 
     steps = coder_state.task_plan.implementation_steps
     if coder_state.current_step_idx >= len(steps):
@@ -72,9 +90,17 @@ def coder_agent(state: dict) -> dict:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ]})
-        print(f"Coder agent result: {result}")
+        # Safely print to avoid encoding issues
+        try:
+            print(f"Coder agent result: {result}")
+        except UnicodeEncodeError:
+            print("Coder agent completed")
     except Exception as e:
-        print(f"Error in coder agent: {e}")
+        # Safely print to avoid encoding issues
+        try:
+            print(f"Error in coder agent: {e}")
+        except UnicodeEncodeError:
+            print("Error in coder agent")
         # Continue to next step even if there's an error
 
     coder_state.current_step_idx += 1
