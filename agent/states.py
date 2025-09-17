@@ -13,6 +13,7 @@ class Plan(BaseModel):
     techstack: str = Field(description="The tech stack to be used for the app, e.g. 'python', 'javascript', 'react', 'flask', etc.")
     features: list[str] = Field(description="A list of features that the app should have, e.g. 'user authentication', 'data visualization', etc.")
     files: list[File] = Field(description="A list of files to be created, each with a 'path' and 'purpose'")
+    project_id: Optional[str] = Field(None, description="Unique identifier for this project")
 
 class ImplementationTask(BaseModel):
     filepath: str = Field(description="The path to the file to be modified")
@@ -26,3 +27,4 @@ class CoderState(BaseModel):
     task_plan: TaskPlan = Field(description="The plan for the task to be implemented")
     current_step_idx: int = Field(0, description="The index of the current step in the implementation steps")
     current_file_content: Optional[str] = Field(None, description="The content of the file currently being edited or created")
+    project_id: Optional[str] = Field(None, description="Unique identifier for this project")
