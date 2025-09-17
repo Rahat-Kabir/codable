@@ -2,6 +2,10 @@
 
 Codable bundles a LangGraph/LangChain coding agent scaffold with an optional FastAPI web UI. The agent is prompt-driven: you submit a project request and it generates code—no live editing loop so far.
 
+## Project preview
+
+![Codable UI preview](resource/simpleuiwithcalulator.png)
+
 ## What's Included
 
 - Agent core: `agent/` holds prompts, typed state, tools, and the LangGraph wiring.
@@ -10,14 +14,14 @@ Codable bundles a LangGraph/LangChain coding agent scaffold with an optional Fas
 
 ## Tech we use (and why)
 
-- LangGraph + LangChain: keeps multi-step reasoning transparent while giving us LLM provider flexibility.
+- LangGraph + LangChain: keeps multi-step reasoning transparent while orchestrating Groq's models cleanly.
 - FastAPI + WebSockets: lightweight async server that makes streaming status updates trivial.
 - Vanilla JS + CSS + Prism.js: minimal front-end stack that stays easy to fork, yet provides syntax-highlighted previews.
 
 ## Requirements
 
 - Python `>= 3.11`
-- `OPENAI_API_KEY` and/or `GROQ_API_KEY`
+- `GROQ_API_KEY`
 - Optional: [uv](https://github.com/astral-sh/uv) for dependency management
 
 ## Install
