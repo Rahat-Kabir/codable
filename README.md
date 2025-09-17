@@ -2,6 +2,10 @@
 
 Codable bundles a LangGraph/LangChain coding agent scaffold with an optional FastAPI web UI. The agent is prompt-driven: you submit a project request and it generates code—no live editing loop so far.
 
+## Project preview
+
+![Codable UI preview](resource/simpleuiwithcalulator.png)
+
 ## What's Included
 
 - Agent core: `agent/` holds prompts, typed state, tools, and the LangGraph wiring.
